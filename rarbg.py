@@ -5,6 +5,7 @@ from request import request
 
 class Rarbg():
     def __init__(self):
+        self.mode=constants.DL_MODE_RARBG
         self.endpoint = constants.RARBG_ENDPOINT
         self.session = requests.Session()
         self.user_agent = '{appid}/{version}'.format(
@@ -18,7 +19,6 @@ class Rarbg():
         }
         resp = self.do_request('GET', self.endpoint, params)
         content = resp.json()
-        print("[*] Token adquiered: ", content['token'])
         return content['token']
 
     def do_request(self, method, url, params=None):
@@ -40,11 +40,11 @@ class Rarbg():
 
         return resp
 
-    def do_query(self, mode, **kwargs):
+    def do_query(self, **kwargs):
         # Format the params
         params = {
-            'mode': mode,
             'token': self.token,
+            'mode': 'search',
             'format': 'json_extended'
         }
 
@@ -80,11 +80,9 @@ class Rarbg():
         categories: (optional) what kind of torrents should be
                 searched, categories should be a list of int
         search_string: (optional)
-        extended_response: (optional) return full context of torrent,
-                default is False
 
         :returns: a list of Torrents
 
         :raises: ValueError
         """
-        return self.do_query('search', **kwargs)
+        return self.do_query(**kwargs,)
